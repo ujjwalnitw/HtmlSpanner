@@ -2,6 +2,7 @@ package net.nightwhistler.htmlspanner.style;
 
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.*;
 import android.util.Log;
 import net.nightwhistler.htmlspanner.FontFamily;
@@ -69,16 +70,21 @@ public class StyleCallback implements SpanCallback {
         }
 
         //If there's no border, we use a BackgroundColorSpan to draw colour behind the text
-        if ( spanner.isUseColoursFromStyle() &&  useStyle.getBackgroundColor() != null  && useStyle.getBorderStyle() == null ) {
-            //Log.d("StyleCallback", "Applying BackgroundColorSpan with color " + useStyle.getBackgroundColor() + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
-              builder.setSpan(new BackgroundColorSpan(useStyle.getBackgroundColor()), start, end,
+        final Integer backgroundColor = spanner.getContrastPatcher().patchBackgroundColor(useStyle);
+        if ( spanner.isUseColoursFromStyle() &&  backgroundColor != null  && useStyle.getBorderStyle() == null ) {
+            //Log.d("StyleCallback", "Applying BackgroundColorSpan with color " + backgroundColor + " from " + start + " to " + end + " on text " + builder.subSequence(start, end));
+              builder.setSpan(new BackgroundColorSpan(backgroundColor), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         //If there is a border, the BorderSpan will also draw the background colour if needed.
         if ( useStyle.getBorderStyle() != null ) {
-            builder.setSpan(new BorderSpan(useStyle, start, end, spanner.isUseColoursFromStyle()), start, end,
+            builder.setSpan(new BorderSpan(useStyle, start, end, spanner), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        if (useStyle.getTextDecoration() != null && useStyle.getTextDecoration() == Style.TextDecoration.UNDERLINE) {
+            builder.setSpan(new UnderlineSpan(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
         if ( useStyle.getFontSize() != null ) {
@@ -100,9 +106,10 @@ public class StyleCallback implements SpanCallback {
             }
         }
 
-        if ( spanner.isUseColoursFromStyle() && useStyle.getColor() != null ) {
+        final Integer fontColor = spanner.getContrastPatcher().patchFontColor(useStyle);
+        if ( spanner.isUseColoursFromStyle() && fontColor != null ) {
             //Log.d("StyleCallback", "Applying ForegroundColorSpan from " + start + " to " + end + " on text " + builder.subSequence(start, end) );
-            builder.setSpan(new ForegroundColorSpan(useStyle.getColor()), start, end,
+            builder.setSpan(new ForegroundColorSpan(fontColor), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 

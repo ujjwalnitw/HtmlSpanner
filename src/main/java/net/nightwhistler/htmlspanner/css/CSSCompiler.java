@@ -7,6 +7,7 @@ import com.osbcp.cssparser.Rule;
 import com.osbcp.cssparser.Selector;
 import net.nightwhistler.htmlspanner.FontFamily;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
+import net.nightwhistler.htmlspanner.handlers.UnderlineHandler;
 import net.nightwhistler.htmlspanner.style.Style;
 import net.nightwhistler.htmlspanner.style.StyleValue;
 import org.htmlcleaner.TagNode;
@@ -289,7 +290,7 @@ public class CSSCompiler {
                     @Override
                     public Style updateStyle(Style style, HtmlSpanner spanner) {
                         Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                        return style.setFontSize(styleValue);
+                        return spanner.isUseFontSizeFromStyle() ? style.setFontSize(styleValue) : style;
                     }
                 };
 
@@ -302,7 +303,7 @@ public class CSSCompiler {
                         @Override
                         public Style updateStyle(Style style, HtmlSpanner spanner) {
                             Log.d("CSSCompiler", "Applying style " + key + ": " + value );
-                            return style.setFontSize(new StyleValue(number, StyleValue.Unit.EM));
+                            return spanner.isUseFontSizeFromStyle() ? style.setFontSize(new StyleValue(number, StyleValue.Unit.EM)) : style;
                         }
                     };
                 } catch ( NumberFormatException nfe ) {
@@ -310,6 +311,16 @@ public class CSSCompiler {
                     return null;
                 }
             }
+        }
+
+        if ( "text-decoration".equals(key) && "underline".equals(value)) {
+            return new StyleUpdater() {
+                    @Override
+                    public Style updateStyle(Style style, HtmlSpanner spanner) {
+                        Log.d("CSSCompiler", "Applying style " + key + ": " + value );
+                        return style.setTextDecoration(Style.TextDecoration.UNDERLINE);
+                    }
+            };
         }
 
         if ( "margin-bottom".equals(key) ) {

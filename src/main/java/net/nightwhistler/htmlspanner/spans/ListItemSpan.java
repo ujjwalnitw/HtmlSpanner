@@ -16,12 +16,14 @@
 
 package net.nightwhistler.htmlspanner.spans;
 
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import net.nightwhistler.htmlspanner.HtmlSpanner;
+import net.nightwhistler.htmlspanner.ViewUtil;
 
 /**
  * This class is similar to Android's BulletSpan with the following differences:
@@ -49,12 +51,12 @@ public class ListItemSpan implements LeadingMarginSpan {
     public ListItemSpan(int number) {
         mNumber = number;
     }
-
+    
     public int getLeadingMargin(boolean first) {
         if (mNumber != -1) {
-            return 2 * NUMBER_RADIUS + STANDARD_GAP_WIDTH;
+            return ViewUtil.dpToPixel(2 * NUMBER_RADIUS + STANDARD_GAP_WIDTH);
         } else {
-            return 2 * BULLET_RADIUS + STANDARD_GAP_WIDTH;
+            return ViewUtil.dpToPixel(2 * BULLET_RADIUS + STANDARD_GAP_WIDTH);
         }
     }
 

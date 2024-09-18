@@ -1,5 +1,9 @@
 # Android HTML rendering library
 
+### Gradle dependency:
+
+``implementation 'com.github.NightWhistler:HtmlSpanner:0.4'``
+
 HtmlSpanner started as the HTML rendering library for PageTurner, but looking through some questions on StackOverflow I noticed how many people were struggling with the infamous ``Html.fromHtml()`` and getting its results to display properly in TextViews.
 
 HtmlSpanner allows you full control over how tags are rendered and gives you all the data about the location of a tag in the text. This allows proper handling of anchors, tables, numbered lists and unordered lists.
@@ -19,6 +23,7 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 * cite
 * dfn
 * b
+* u
 * strong
 * blockquote
 * ul
@@ -65,8 +70,19 @@ HtmlSpanner now also supports the most common subset of CSS: both style tags and
 * border-style
 * border-color
 * border-style
+* text-decoration (underline)
 
 # Usage
+1. add following in root project
+  allprojects {
+    maven { url 'https://jitpack.io' }
+    }
+  }
+
+2. add 
+## compile 'com.github.NightWhistler:HtmlSpanner:0.4'##
+in app module
+
 In its simplest form, just call ``(new HtmlSpanner()).fromHtml()`` to get similar output as Android's ``Html.fromHtml()``.
 
 # HTMLCleaner Source
